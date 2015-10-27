@@ -93,7 +93,11 @@ public class BoxBall
             int y1 = yPosition;
             int x2 = collision.getXPos();
             int y2 = collision.getYPos();
-            
+            //the code for realistic collisions goes here
+            //First convert to normalized vectors by sqRoot(x^2,y^2)
+            //then do dot product as per: http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/
+            // to find the angle between its direction and the angle between the circles
+            //then modify the xSpeed and ySpeed variables according to the new direction
         }
     }
         
