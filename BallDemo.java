@@ -51,10 +51,6 @@ public class BallDemo
             myCanvas.wait(50);           // small delay
             ball.move();
             ball2.move();
-            // stop once ball has travelled a certain distance on x axis
-            if(ball.getXPosition() >= 550 || ball2.getXPosition() >= 550) {
-                finished = true;
-            }
         }
     }
 
@@ -68,6 +64,8 @@ public class BallDemo
         populateBalls();
         while(true)
         {
+            drawBox();
+            myCanvas.wait(50);
             for(BoxBall ball : balls)
             {
                 ball.move();
@@ -97,9 +95,10 @@ public class BallDemo
     {
         rng = new Random();
         balls = new HashSet<BoxBall>();
-        for(int i = 0 ; i < 500; i++)
-        {balls.add(new BoxBall(rng.nextInt(OFFSET, myCanvas.getSize().width - OFFSET),
-        rng.nextInt(myCanvas.getSize().height - OFFSET*10) + OFFSET*10, 10 + rng.nextInt(20),
-        new Color(rng.nextInt(200),rng.nextInt(200),rng.nextInt(200)),myCanvas));}
+        for(int i = 0 ; i < 50; i++)
+        {balls.add(new BoxBall(rng.nextInt(myCanvas.getSize().width - OFFSET*6) +OFFSET*2,
+        rng.nextInt(myCanvas.getSize().height - OFFSET*6) + OFFSET*2, rng.nextInt(10) - 5,
+        rng.nextInt(10) - 5, 10 + rng.nextInt(20), new Color(rng.nextInt(200),
+        rng.nextInt(200),rng.nextInt(200)),myCanvas,balls));}
     }
 }

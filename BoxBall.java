@@ -21,6 +21,7 @@ public class BoxBall
     private int xSpeed;
     private int ySpeed;
     private Canvas canvas;
+    private HashSet<BoxBall> balls;
 
     /**
      * Constructor for objects of class BoxBall
@@ -31,13 +32,16 @@ public class BoxBall
      * @param ballColor  the color of the ball
      * @param drawingCanvas  the canvas to draw this ball on
      */
-    public BoxBall(int xPos, int yPos, int ballDiameter, Color ballColor, Canvas drawingCanvas)
+    public BoxBall(int xPos, int yPos, int xSpeed, int ySpeed, int ballDiameter, Color ballColor, Canvas drawingCanvas, HashSet<BoxBall> balls)
     {
         xPosition = xPos;
         yPosition = yPos;
         color = ballColor;
         diameter = ballDiameter;
         canvas = drawingCanvas;
+        this.balls = balls;
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
     }
     
      /**
@@ -65,23 +69,39 @@ public class BoxBall
         erase();
         yPosition += ySpeed;
         xPosition += xSpeed;
-        checkCollisions();
+        findCollisions();
         draw();
     }
     
     /**
      * method for checking for collisions
      */
-    private void checkCollisions()
+    private void findCollisions()
     {
-        ArrayList<BoxBall> collisions;
+        ArrayList<BoxBall> collisions = getBallCollisions();
+        if(xPosition + (diameter/2) >= (canvas.getSize().width -30) || xPosition + diameter/2 <= 30)
+        {
+            xSpeed = -xSpeed;
+        }
+        if(yPosition + diameter/2 >= (canvas.getSize().height-30) || yPosition + diameter/2 <= 30)
+        {
+            ySpeed = -ySpeed;
+        }
+        for (BoxBall collision : collisions)
+        {
+            int x1 = xPosition;
+            int y1 = yPosition;
+            int x2 = collision.getXPos();
+            int y2 = collision.getYPos();
+            
+        }
     }
         
 
     /**
      * return the horizontal position of this ball
      */
-    public int getXPosition()
+    public int getXPos()
     {
         return xPosition;
     }
@@ -89,8 +109,65 @@ public class BoxBall
     /**
      * return the vertical position of this ball
      */
-    public int getYPosition()
+    public int getYPos()
     {
         return yPosition;
     }
+    
+    /**
+     * returns the radius
+     */
+    public int getDiameter()
+    {
+        return diameter;
+    }
+    
+    /**
+     * Returns any collisions with other balls
+     */
+    public ArrayList<BoxBall> getBallCollisions()
+    {
+        ArrayList<BoxBall> nearbyList = new ArrayList<BoxBall>();
+        for (BoxBall check : balls)
+        {
+            if (check == this)
+            {
+                //it's the same object
+            }
+            else
+            {
+                
+                if(collisionMath(check))
+                {
+                    nearbyList.add(check);
+                }
+            }
+        }
+        return nearbyList;
+    }
+    
+    /*
+     * Does the collision calculations
+     */
+    private boolean collisionMath(BoxBall check)
+    {
+        int x1 = xPosition;
+        int y1 = yPosition;
+        int x2 = check.getXPos();
+        int y2 = check.getYPos();
+        double rad1 = diameter / 2.0;
+        double rad2 = check.getDiameter() / 2.0;
+        double distance = Math.sqrt(Math.abs((x1-x2)*(x1-x2)) + Math.abs((y1-y2)*(y1-y2)));
+        double closestPoint = distance - (rad1+rad2);
+        if (closestPoint <=0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    
 }
